@@ -3,12 +3,17 @@
 
 package dnscontrol
 
+import (
+	"github.com/SidingsMedia/dns-control/dnscontrol/model"
+	"github.com/jinzhu/copier"
+)
+
 type Service interface {
-	// <Handler>(<model> *model.<model>) error
+	ListServers() model.List[model.Server]
 }
 
 type service struct {
-	// Any resources go here
+	repository Repository
 }
 
 // func (service *Service) <Handler>(<model> *model.<Model>) error {
@@ -16,8 +21,17 @@ type service struct {
 // 	return nil
 // }
 
-func NewService() Service {
+func (s service) ListServers() model.List[model.Server] {
+	servers := s.repository.GetServers()
+
+	var responseServers []model.Server
+	copier.Copy(&responseServers, &servers)
+
+	return model.List[model.Server]{Results: responseServers}
+}
+
+func NewService(repository Repository) Service {
 	return &service{
-		//Resources
+		repository: repository,
 	}
 }

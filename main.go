@@ -56,7 +56,12 @@ func main() {
 	engine.Use(gin.Recovery())
 	engine.Use(cors.Default())
 
-	dnscontrol.NewController(engine, dnscontrol.NewService())
+	dnscontrol.NewController(
+		engine,
+		dnscontrol.NewService(
+			dnscontrol.NewRepository(conf.Servers),
+		),
+	)
 
 	// Set trusted proxies. If user has set it to * then we can just
 	// ignore it as GIN trusts all by default
