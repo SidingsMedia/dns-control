@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/SidingsMedia/api.sidingsmedia.com/model"
+	"github.com/SidingsMedia/dns-control/dnscontrol/model"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
@@ -19,7 +19,7 @@ func SendBadRequestFieldNames(ctx *gin.Context, validationError validator.Valida
 		Code:    http.StatusBadRequest,
 		Message: "Your request is malformed",
 	}
-    // Itterate through errors and add field name and condition to fields
+	// Itterate through errors and add field name and condition to fields
 	for _, malformedField := range validationError {
 		field := malformedField.Field()
 		response.Fields = append(response.Fields, model.Fields{

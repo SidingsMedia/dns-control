@@ -4,50 +4,69 @@
 package main
 
 import (
-	"log"
-	"strings"
+	"flag"
+	"fmt"
+	"log/slog"
+	"runtime/debug"
 
-	"github.com/SidingsMedia/api.sidingsmedia.com/util"
+	"github.com/SidingsMedia/dns-control/config"
+	"github.com/SidingsMedia/dns-control/dnscontrol"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
+	sloggin "github.com/samber/slog-gin"
 )
 
 func init() {
-	log.Println("Fetching environment variables")
-
-	// This will fail in a docker container. Perhaps we need to check if
-	// we are in a container and only run if not.
-	err := godotenv.Load()
-	if err != nil {
-		log.Println("Failed to load .env file")
-	}
-
-	// Server settings
-	util.BindAddr = util.SGetenv(util.BindAddrEnv, util.DefaultBindAddr)
-	util.TrustedProxies = strings.Split(
-		util.SGetenv(util.TrustedProxiesEnv, util.DefaultTrustedProxies),
-		",",
-	)
+	config.CliFlags.ConfigFilePath = flag.String("config", "config.yaml", "path to configuration file")
+	config.CliFlags.ShowVersion = flag.Bool("version", false, "show current command version")
 }
 
 func main() {
-    // <service>Service := service.New<Service>Service()
+	flag.Parse()
+	buildinfo, haveBuildInfo := debug.ReadBuildInfo()
 
-	engine := gin.Default()
-    engine.Use(cors.Default())
+	if *config.CliFlags.ShowVersion {
+		if haveBuildInfo {
+			fmt.Printf("dns-config %s (%s)", buildinfo.Main.Version, buildinfo.GoVersion)
+		}
+		return
+	}
 
-    // controller.New<Service>Controller(engine, <service>Service)
+	if haveBuildInfo {
+		slog.Info("Starting dns-config", "version", buildinfo.Main.Version, "go", buildinfo.GoVersion)
+	} else {
+		slog.Info("Starting dns-config")
+	}
+
+	conf, err := config.ReadConfigFile(*config.CliFlags.ConfigFilePath)
+
+	if err != nil {
+		slog.Error("Failed to read configuration file", "error", err)
+		return
+	}
+
+	if conf.Debug {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
+	engine := gin.New()
+	engine.Use(sloggin.New(slog.Default()))
+	engine.Use(gin.Recovery())
+	engine.Use(cors.Default())
+
+	dnscontrol.NewController(engine, dnscontrol.NewService())
 
 	// Set trusted proxies. If user has set it to * then we can just
 	// ignore it as GIN trusts all by default
-	if util.TrustedProxies[0] != "*" {
-		if err := engine.SetTrustedProxies(util.TrustedProxies); err != nil {
-			log.Fatalf("Failed to set trusted proxies. %s", err)
+	if conf.TrustedProxies[0] != "*" {
+		if err := engine.SetTrustedProxies(conf.TrustedProxies); err != nil {
+			slog.Error("Failed to set trusted proxies", "error", err)
 		}
-		log.Printf("Trusting the following proxies: %s", util.TrustedProxies)
+		slog.Info("Set trusted proxies", "proxies", conf.TrustedProxies)
 	}
 
-	log.Printf("Starting server on %s\n", util.BindAddr)
-	engine.Run(util.BindAddr)
+	slog.Info("Starting server", "bind", conf.BindAddr)
+	engine.Run(conf.BindAddr)
 }

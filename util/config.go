@@ -16,9 +16,3 @@ const (
 	BindAddrEnv       = "BIND_ADDRESS"
 	TrustedProxiesEnv = "TRUSTED_PROXIES"
 )
-
-// Defaults
-const (
-	DefaultBindAddr       = "[::]:3000"
-	DefaultTrustedProxies = "*"
-)
