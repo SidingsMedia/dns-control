@@ -1,5 +1,5 @@
-SPDX-FileCopyrightText: 2025 Sidings Media <contact@sidingsmedia.com>
-SPDX-License-Identifier: CC0-1.0
+# SPDX-FileCopyrightText: 2025 Sidings Media <contact@sidingsmedia.com>
+# SPDX-License-Identifier: CC0-1.0
 
 # Set the operation mode for gin. WARNING: Never run debug mode in production
 # debug: false
@@ -7,7 +7,7 @@ SPDX-License-Identifier: CC0-1.0
 # Specify technetium DNS servers
 servers:
   # IP or FQDN of target
-  - target: abc
+  - target: 192.168.1.50
     # A friendly name
     name: abc
     # API secret
