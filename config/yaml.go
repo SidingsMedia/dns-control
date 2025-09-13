@@ -7,6 +7,7 @@ type Server struct {
 	Target string `yaml:"target"`
 	Name   string `yaml:"name"`
 	Token  string `yaml:"token"`
+	Id     string `yaml:"id"`
 }
 
 type ConfigFile struct {

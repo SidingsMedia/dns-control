@@ -7,11 +7,14 @@
 # Specify technetium DNS servers
 servers:
   # IP or FQDN of target
-  - target: 192.168.1.50
+  - target: http://192.168.1.50
     # A friendly name
     name: abc
     # API secret
     token: supersecret
+    # A unique ID for this server. A UUID works fine here, but you can
+    # have any string you like so long as it is unique.
+    id: a2094e7a-fe07-4707-b377-2609f5cd13f8
 # Port to bind sever to
 # bind: [::]:3000
 
