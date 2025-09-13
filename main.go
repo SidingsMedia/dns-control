@@ -65,6 +65,8 @@ func main() {
 			slog.Error("Failed to set trusted proxies", "error", err)
 		}
 		slog.Info("Set trusted proxies", "proxies", conf.TrustedProxies)
+	} else {
+		slog.Warn("You trusted all proxies, this is NOT safe. We recommend you to set a value.", "trustedProxies", conf.TrustedProxies)
 	}
 
 	slog.Info("Starting server", "bind", conf.BindAddr)
