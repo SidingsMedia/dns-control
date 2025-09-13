@@ -16,4 +16,4 @@ servers:
 # bind: [::]:3000
 
 # Proxies to trust. Defaults to [*]
-#trusted-proxies: [192.168.10.20]
+# trusted-proxies: [192.168.10.20]
