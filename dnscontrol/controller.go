@@ -19,6 +19,7 @@ type Controller interface {
 	Health(ctx *gin.Context)
 	ListServers(ctx *gin.Context)
 	GetCache(ctx *gin.Context)
+	DeleteCacheEntry(ctx *gin.Context)
 }
 
 type controller struct {
@@ -64,8 +65,10 @@ func getFieldName(ctx *gin.Context, malformedField validator.FieldError, typ ref
 // that suffered from binding errors
 func sendBadRequestFieldNames(ctx *gin.Context, validationError validator.ValidationErrors, typ reflect.Type) {
 	response := &model.BadRequest{
-		Code:    http.StatusBadRequest,
-		Message: "Your request is malformed",
+		GeneralError: model.GeneralError{
+			Code:    http.StatusBadRequest,
+			Message: "Your request is malformed",
+		},
 	}
 
 	// Iterate through errors and add field name and condition to fields
@@ -144,6 +147,50 @@ func (controller controller) GetCache(ctx *gin.Context) {
 	formatJson(ctx, http.StatusOK, response)
 }
 
+func (controller controller) DeleteCacheEntry(ctx *gin.Context) {
+	queryParams := GetCacheRequest{}
+
+	if err := ctx.BindQuery(&queryParams); err != nil && errors.As(err, &validator.ValidationErrors{}) {
+		sendBadRequestFieldNames(ctx, err.(validator.ValidationErrors), reflect.TypeOf(GetCacheRequest{}))
+		return
+	} else if err != nil {
+		formatJson(ctx, http.StatusBadRequest, model.GeneralError{
+			Code:    http.StatusBadRequest,
+			Message: "Request was malformed",
+		})
+
+		ctx.Abort()
+		return
+	}
+
+	response, err := controller.service.DeleteCacheEntry(queryParams.Domain, queryParams.Servers)
+	if err != nil {
+		switch err {
+		case ErrServerNotFound:
+			formatJson(ctx, http.StatusNotFound, model.GeneralError{
+				Code:    http.StatusNotFound,
+				Message: err.Error(),
+			})
+			ctx.Abort()
+			return
+		}
+
+		formatJson(ctx, http.StatusInternalServerError, model.GeneralError{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		})
+		ctx.Abort()
+		return
+	}
+
+	if response != nil {
+		formatJson(ctx, response.Code, response)
+		ctx.Abort()
+	}
+
+	ctx.Status(http.StatusNoContent)
+}
+
 func NewController(engine *gin.Engine, Service Service) {
 	controller := &controller{
 		service: Service,
@@ -153,5 +200,6 @@ func NewController(engine *gin.Engine, Service Service) {
 		api.GET("health", controller.HealthCheck)
 		api.GET("servers", controller.ListServers)
 		api.GET("cache", controller.GetCache)
+		api.DELETE("cache", controller.DeleteCacheEntry)
 	}
 }

@@ -4,6 +4,8 @@
 package dnscontrol
 
 import (
+	"net/http"
+
 	"github.com/SidingsMedia/dns-control/dnscontrol/model"
 	mapset "github.com/deckarep/golang-set/v2"
 	"github.com/jinzhu/copier"
@@ -12,6 +14,7 @@ import (
 type Service interface {
 	ListServers() model.List[model.Server]
 	GetCache(domain string, servers []string) (*model.CacheResponse, error)
+	DeleteCacheEntry(zone string, servers []string) (*model.PerServerFail, error)
 }
 
 type service struct {
@@ -87,6 +90,30 @@ func (s service) GetCache(domain string, servers []string) (*model.CacheResponse
 		i++
 	}
 
+	return &response, nil
+}
+
+func (s service) DeleteCacheEntry(zone string, servers []string) (*model.PerServerFail, error) {
+	srvFail, err := s.repository.DeleteCacheEntry(zone, servers)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(srvFail) == 0 {
+		return nil, nil
+	}
+
+	response := model.PerServerFail{
+		GeneralError: model.GeneralError{
+			Code:    http.StatusInternalServerError,
+			Message: "Operation partially succeeded. Some errors occurred",
+		},
+		AffectedServers: make([]model.AffectedServer, len(srvFail)),
+	}
+
+	for i, fail := range srvFail {
+		response.AffectedServers[i] = model.AffectedServer{Id: fail.Id, Message: fail.Err.Error()}
+	}
 	return &response, nil
 }
 

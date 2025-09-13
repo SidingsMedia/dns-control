@@ -18,3 +18,8 @@ type CacheResult struct {
 		Records []CacheRecord `json:"records"`
 	} `json:"response"`
 }
+
+type PerServerFail struct {
+	Id  string
+	Err error
+}
