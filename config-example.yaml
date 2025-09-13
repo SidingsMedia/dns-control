@@ -1,0 +1,19 @@
+SPDX-FileCopyrightText: 2025 Sidings Media <contact@sidingsmedia.com>
+SPDX-License-Identifier: CC0-1.0
+
+# Set the operation mode for gin. WARNING: Never run debug mode in production
+# debug: false
+
+# Specify technetium DNS servers
+servers:
+  # IP or FQDN of target
+  - target: abc
+    # A friendly name
+    name: abc
+    # API secret
+    token: supersecret
+# Port to bind sever to
+# bind: [::]:3000
+
+# Proxies to trust. Defaults to [*]
+#trusted-proxies: [192.168.10.20]

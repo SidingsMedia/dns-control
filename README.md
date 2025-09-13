@@ -43,18 +43,12 @@ container. This may take a while.
 
 ## Running
 
-### Environment variables
+### Configuration File
 
-This service requires certain environment variables in order to function
-correctly. An example `.env` file can be found in the document root
-(`.env.example`). Below is a complete table of all environment
-variables.
-
-| Name              | Required | Description                                                                                                         | Example                                       |
-| ----------------- | -------- | ------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| `BIND_ADDR`       | :x:      | This is the address to bind the server to. Defaults to `[::1]:3000`.                                                | `[::]:3000`                                   |
-| `TRUSTED_PROXIES` | :x:      | Proxy servers to trust when reading client IP headers. Provide addresses in a comma separated list.Defaults to `*`. | `192.0.2.1,192.0.2.2,2001:db8::1,2001:db8::2` |
-| `GIN_MODE`        | :x:      | Mode to run Gin in. Only set to `debug` for development. Defaults to `release`.                                     | `release`                                     |
+Configuration is provided through a `yaml` file. An example can be found
+at [config-example.yaml](/config-example.yaml). By default, the service
+will attempt to load `config.yaml` from it's current working directory.
+You may use the `-config` flag to specify another path.
 
 ### Binary
 
