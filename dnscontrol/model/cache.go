@@ -12,7 +12,7 @@ type CachedResult struct {
 type CacheEntry struct {
 	Name         string         `json:"name"`
 	Type         string         `json:"type"`
-	CachedResult []CachedResult `json:"cached-results"`
+	CachedResult []CachedResult `json:"cachedResults"`
 }
 
 type CacheResponse struct {
