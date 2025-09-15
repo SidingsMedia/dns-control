@@ -80,8 +80,8 @@ func (s service) GetCache(domain string, servers []string) (*model.CacheResponse
 	}
 
 	response := model.CacheResponse{
-		Entries:          make([]model.CacheEntry, len(combinedCache)),
-		AvailableDomains: zones.ToSlice(),
+		Entries: make([]model.CacheEntry, len(combinedCache)),
+		Zones:   zones.ToSlice(),
 	}
 
 	i := 0

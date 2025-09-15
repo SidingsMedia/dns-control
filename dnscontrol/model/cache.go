@@ -16,6 +16,6 @@ type CacheEntry struct {
 }
 
 type CacheResponse struct {
-	AvailableDomains []string     `json:"domains"`
-	Entries          []CacheEntry `json:"entries"`
+	Zones   []string     `json:"zones"`
+	Entries []CacheEntry `json:"entries"`
 }
