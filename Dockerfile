@@ -23,7 +23,7 @@ FROM gcr.io/distroless/base-debian10
 
 WORKDIR /
 
-COPY --from=build /build/server /server
+COPY --from=build /build/service /service
 
 ENV GIN_MODE=release
 
