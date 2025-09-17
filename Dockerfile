@@ -16,7 +16,7 @@ RUN go mod download
 COPY . /build
 
 # Compile binary
-RUN CGO_ENABLED=0 go build -a -o server
+RUN CGO_ENABLED=0 go build -a -o service
 
 ## Deploy
 FROM gcr.io/distroless/base-debian10
@@ -31,4 +31,4 @@ EXPOSE 3000/tcp
 
 USER nonroot:nonroot
 
-ENTRYPOINT ["/server", "--config", "/etc/server/config.yaml"]
+ENTRYPOINT ["/service", "--config", "/etc/server/config.yaml"]
