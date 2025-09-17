@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2023 Sidings Media
 # SPDX-License-Identifier: MIT
 
-FROM golang:latest as build
+FROM golang:latest AS build
 
 ## Build
 WORKDIR /build
@@ -31,4 +31,4 @@ EXPOSE 3000/tcp
 
 USER nonroot:nonroot
 
-ENTRYPOINT ["/server"]
+ENTRYPOINT ["/server", "--config", "/etc/server/config.yaml"]
