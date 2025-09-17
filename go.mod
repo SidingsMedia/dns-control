@@ -1,4 +1,4 @@
-module github.com/SidingsMedia/dns-control
+module github.com/SidingsMedia/unified-control-rdns
 
 go 1.21.0
 

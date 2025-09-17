@@ -1,13 +1,13 @@
 // SPDX-FileCopyrightText: 2025 Sidings Media
 // SPDX-License-Identifier: MIT
 
-package dnscontrol
+package server
 
 import (
 	"net/http"
 	"slices"
 
-	"github.com/SidingsMedia/dns-control/dnscontrol/model"
+	"github.com/SidingsMedia/unified-control-rdns/server/model"
 	mapset "github.com/deckarep/golang-set/v2"
 	"github.com/jinzhu/copier"
 )

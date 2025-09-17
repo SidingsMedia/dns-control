@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2025 Sidings Media
 // SPDX-License-Identifier: MIT
 
-package dnscontrol
+package server
 
 import (
 	"errors"
@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/SidingsMedia/dns-control/dnscontrol/model"
+	"github.com/SidingsMedia/unified-control-rdns/server/model"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )

@@ -1,4 +1,4 @@
 version = 1
-SPDX-PackageName = "dns-control"
+SPDX-PackageName = "unified-control-rdns"
 SPDX-PackageSupplier = "Sidings Media <contact@sidingsmedia.com>"
 annotations = []

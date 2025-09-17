@@ -9,8 +9,8 @@ import (
 	"log/slog"
 	"runtime/debug"
 
-	"github.com/SidingsMedia/dns-control/config"
-	"github.com/SidingsMedia/dns-control/dnscontrol"
+	"github.com/SidingsMedia/unified-control-rdns/config"
+	"github.com/SidingsMedia/unified-control-rdns/server"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	sloggin "github.com/samber/slog-gin"
@@ -56,10 +56,10 @@ func main() {
 	engine.Use(gin.Recovery())
 	engine.Use(cors.Default())
 
-	dnscontrol.NewController(
+	server.NewController(
 		engine,
-		dnscontrol.NewService(
-			dnscontrol.NewRepository(conf.Servers),
+		server.NewService(
+			server.NewRepository(conf.Servers),
 		),
 	)
 

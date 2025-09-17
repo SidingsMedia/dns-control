@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2025 Sidings Media
 // SPDX-License-Identifier: MIT
 
-package dnscontrol
+package server
 
 import (
 	"encoding/json"
@@ -10,8 +10,8 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/SidingsMedia/dns-control/config"
-	"github.com/SidingsMedia/dns-control/dnscontrol/domain"
+	"github.com/SidingsMedia/unified-control-rdns/config"
+	"github.com/SidingsMedia/unified-control-rdns/server/domain"
 	"github.com/jinzhu/copier"
 )
 
