@@ -5,6 +5,7 @@ package dnscontrol
 
 import (
 	"net/http"
+	"slices"
 
 	"github.com/SidingsMedia/dns-control/dnscontrol/model"
 	mapset "github.com/deckarep/golang-set/v2"
@@ -79,9 +80,12 @@ func (s service) GetCache(domain string, servers []string) (*model.CacheResponse
 		}
 	}
 
+	zoneList := zones.ToSlice()
+	slices.Sort(zoneList)
+
 	response := model.CacheResponse{
 		Entries: make([]model.CacheEntry, len(combinedCache)),
-		Zones:   zones.ToSlice(),
+		Zones:   zoneList,
 	}
 
 	i := 0
