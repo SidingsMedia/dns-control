@@ -19,7 +19,7 @@ COPY . /build
 RUN CGO_ENABLED=0 go build -a -o service
 
 ## Deploy
-FROM gcr.io/distroless/base-debian10
+FROM gcr.io/distroless/base-debian12
 
 WORKDIR /
 
